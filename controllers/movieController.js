@@ -5,7 +5,13 @@ function index(req, res) {
 
   connection.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
-    res.json(results);
+
+    const movies = results.map((movie) => ({
+      ...movie,
+      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/movies_cover/${movie.image}`,
+    }));
+
+    res.json(movies);
   });
 }
 
@@ -21,7 +27,11 @@ function show(req, res) {
     if (results.length === 0)
       return res.status(404).json({ error: "Movie not found" });
 
-    const movie = results[0];
+    const movie = {
+      ...results[0],
+      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/movies_cover/${results[0].image}`,
+    };
+
     connection.query(sql2, [id], (err, results) => {
       if (err) return res.status(500).json({ error: "Database query failed" });
       if (results.length === 0)
