@@ -10,8 +10,8 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 
-const post = require("./routers/movie.js");
-app.use("/movie", post);
+const movie = require("./routers/movie.js");
+app.use("/movie", movie);
 
 const errorsHandler = require("./middlewares/error.js");
 app.use(errorsHandler.errorsHandler);
