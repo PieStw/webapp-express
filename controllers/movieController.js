@@ -14,7 +14,7 @@ function show(req, res) {
 
   const sql1 = "SELECT * FROM movies WHERE id = ?";
   const sql2 =
-    "SELECT reviews.* FROM movies JOIN reviews ON reviews.movie_id = movies.id WHERE posts.id = ?";
+    "SELECT reviews.* FROM movies JOIN reviews ON reviews.movie_id = movies.id WHERE movies.id = ?";
 
   connection.query(sql1, [id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
@@ -26,8 +26,8 @@ function show(req, res) {
       if (err) return res.status(500).json({ error: "Database query failed" });
       if (results.length === 0)
         return res.status(404).json({ error: "Reviews not found" });
-      post.reviews = results;
-      res.json(post);
+      movie.reviews = results;
+      res.json(movie);
     });
   });
 }
