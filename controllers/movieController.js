@@ -1,34 +1,35 @@
 const connection = require("./../data/db");
 
 function index(req, res) {
-  const tag = req.query.tag;
+  const sql = "SELECT * FROM movies";
 
-  if (tag) {
-    const newPosts = posts.filter((post) => {
-      return post.tags.includes(tag.toLowerCase());
-    });
-
-    res.json({ posts: newPosts, numeroElementi: newPosts.length });
-  } else res.json({ posts: posts, numeroElementi: posts.length });
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.json(results);
+  });
 }
 
 function show(req, res) {
   const { id } = req.params;
 
-  if (isNaN(id)) {
-    const err = Error("Inserisci un numero");
-    err.code = 400;
-    throw err;
-  }
+  const sql1 = "SELECT * FROM movies WHERE id = ?";
+  const sql2 =
+    "SELECT reviews.* FROM movies JOIN reviews ON reviews.movie_id = movies.id WHERE posts.id = ?";
 
-  const postSelected = posts.find((post) => post.id === parseInt(id));
+  connection.query(sql1, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    if (results.length === 0)
+      return res.status(404).json({ error: "Movie not found" });
 
-  if (postSelected) res.json(postSelected);
-  else {
-    const err = Error("Post non trovato");
-    err.code = 404;
-    throw err;
-  }
+    const movie = results[0];
+    connection.query(sql2, [id], (err, results) => {
+      if (err) return res.status(500).json({ error: "Database query failed" });
+      if (results.length === 0)
+        return res.status(404).json({ error: "Reviews not found" });
+      post.reviews = results;
+      res.json(post);
+    });
+  });
 }
 
 module.exports = { index, show };
