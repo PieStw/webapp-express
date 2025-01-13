@@ -8,7 +8,7 @@ function index(req, res) {
 
     const movies = results.map((movie) => ({
       ...movie,
-      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/movies_cover/${movie.image}`,
+      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/img/${movie.image}`,
     }));
 
     res.json(movies);
@@ -29,7 +29,7 @@ function show(req, res) {
 
     const movie = {
       ...results[0],
-      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/movies_cover/${results[0].image}`,
+      image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/img/${results[0].image}`,
     };
 
     connection.query(sql2, [id], (err, results) => {
