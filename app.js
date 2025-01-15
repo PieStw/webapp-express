@@ -13,6 +13,9 @@ app.use(express.json());
 const movies = require("./routers/movie.js");
 app.use("/movies", movies);
 
+const reviews = require("./routers/review.js");
+app.use("/reviews", reviews);
+
 const errorsHandler = require("./middlewares/error.js");
 app.use(errorsHandler.errorsHandler);
 app.use(errorsHandler.notFound);
