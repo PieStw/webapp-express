@@ -15,4 +15,19 @@ function store(req, res) {
   });
 }
 
-module.exports = { store };
+function show(req, res) {
+  const { id } = req.params;
+
+  const sql =
+    "SELECT reviews.* FROM movies JOIN reviews ON reviews.movie_id = movies.id WHERE movies.id = ?";
+
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    if (results.length === 0)
+      return res.status(404).json({ error: "Reviews not found" });
+
+    res.json(results);
+  });
+}
+
+module.exports = { store, show };

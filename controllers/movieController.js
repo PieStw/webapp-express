@@ -19,8 +19,6 @@ function show(req, res) {
   const { id } = req.params;
 
   const sql1 = "SELECT * FROM movies WHERE id = ?";
-  const sql2 =
-    "SELECT reviews.* FROM movies JOIN reviews ON reviews.movie_id = movies.id WHERE movies.id = ?";
 
   connection.query(sql1, [id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
@@ -32,13 +30,7 @@ function show(req, res) {
       image: `${process.env.HOST_DOMAIN}:${process.env.HOST_PORT}/img/${results[0].image}`,
     };
 
-    connection.query(sql2, [id], (err, results) => {
-      if (err) return res.status(500).json({ error: "Database query failed" });
-      if (results.length === 0)
-        return res.status(404).json({ error: "Reviews not found" });
-      movie.reviews = results;
-      res.json(movie);
-    });
+    res.json(movie);
   });
 }
 
